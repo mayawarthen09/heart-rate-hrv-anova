@@ -211,7 +211,9 @@ bpm_modality = (
 )
 
 for i in range(len(modalities)):
+
     for j in range(i + 1, len(modalities)):
+
         mod1 = modalities[i]
         mod2 = modalities[j]
 
@@ -230,16 +232,16 @@ for i in range(len(modalities)):
             paired["b"]
         )
 
-       additional_posthoc_results.append({
-    "Measure": "BPM",
-    "Effect": "Modality",
-    "Comparison": f"{mod1} vs {mod2}",
-    "Mean_1": paired["a"].mean(),
-    "Mean_2": paired["b"].mean(),
-    "Difference": paired["a"].mean() - paired["b"].mean(),
-    "t": t_stat,
-    "p": p_value
-})
+        additional_posthoc_results.append({
+            "Measure": "BPM",
+            "Effect": "Modality",
+            "Comparison": f"{mod1} vs {mod2}",
+            "Mean_1": paired["a"].mean(),
+            "Mean_2": paired["b"].mean(),
+            "Difference": paired["a"].mean() - paired["b"].mean(),
+            "t": t_stat,
+            "p": p_value
+        })
 
 for modality in modalities:
     hz10 = df[
