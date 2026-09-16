@@ -349,5 +349,189 @@ additional_posthoc_df.to_csv(
     "additional_posthoc_results.csv",
     index=False
 )
+import matplotlib.pyplot as plt
 
+order = ["sound", "vibration", "light", "sound+light"]
+
+
+bpm_plot = (
+    stim_df.groupby(["Frequency", "Modality"])["BPM"]
+    .agg(["mean", "sem"])
+    .reset_index()
+)
+
+plt.figure()
+
+for freq in [10, 40]:
+    data = bpm_plot[bpm_plot["Frequency"] == freq].copy()
+    data["Modality"] = pd.Categorical(
+        data["Modality"],
+        categories=order,
+        ordered=True
+    )
+    data = data.sort_values("Modality")
+
+    plt.errorbar(
+        data["Modality"],
+        data["mean"],
+        yerr=data["sem"],
+        marker="o",
+        capsize=4,
+        label=f"{freq} Hz"
+    )
+
+plt.xlabel("Modality")
+plt.ylabel("Mean BPM")
+plt.title("BPM by Modality and Frequency")
+plt.legend()
+plt.tight_layout()
+plt.savefig("bpm_interaction_plot.png", dpi=300)
+plt.close()
+
+
+b# BPM interaction
+bpm_plot = (
+    stim_df.groupby(["Frequency", "Modality"])["BPM"]
+    .agg(["mean", "sem"])
+    .reset_index()
+)
+
+order = ["sound", "vibration", "light", "sound+light"]
+
+plt.figure()
+
+for freq in bpm_plot["Frequency"].dropna().unique():
+    data = bpm_plot[bpm_plot["Frequency"] == freq].copy()
+
+    data["Modality"] = pd.Categorical(
+        data["Modality"],
+        categories=order,
+        ordered=True
+    )
+    data = data.sort_values("Modality")
+
+    label = str(freq)
+    if "Hz" not in label:
+        label += " Hz"
+
+    plt.errorbar(
+        data["Modality"],
+        data["mean"],
+        yerr=data["sem"],
+        marker="o",
+        capsize=4,
+        label=label
+    )
+
+plt.xlabel("Modality")
+plt.ylabel("Mean BPM")
+plt.title("BPM by Modality and Frequency")
+plt.legend()
+plt.tight_layout()
+plt.savefig("bpm_interaction_plot.png", dpi=300)
+plt.close()
+
+sf_modality = (
+    stim_df.groupby(["Participant", "Modality"])["SF"]
+    .mean()
+    .reset_index()
+    .groupby("Modality")["SF"]
+    .agg(["mean", "sem"])
+    .reindex(order)
+)
+
+plt.figure()
+
+plt.bar(
+    sf_modality.index,
+    sf_modality["mean"],
+    yerr=sf_modality["sem"],
+    capsize=4
+)
+
+plt.xlabel("Modality")
+plt.ylabel("Mean SF")
+plt.title("SF by Modality")
+plt.tight_layout()
+plt.savefig("sf_modality_plot.png", dpi=300)
+plt.close()
+
+
+sf_frequency = (
+    stim_df.groupby(["Participant", "Frequency"])["SF"]
+    .mean()
+    .reset_index()
+    .groupby("Frequency")["SF"]
+    .agg(["mean", "sem"])
+)
+
+plt.figure()
+
+plt.bar(
+    sf_frequency.index.astype(str),
+    sf_frequency["mean"],
+    yerr=sf_frequency["sem"],
+    capsize=4
+)
+
+plt.xlabel("Frequency")
+plt.ylabel("Mean SF")
+plt.title("SF by Frequency")
+plt.tight_layout()
+plt.savefig("sf_frequency_plot.png", dpi=300)
+plt.close()
+condition_labels = {
+    1: "10 Hz sound",
+    2: "10 Hz vibration",
+    3: "10 Hz light",
+    4: "40 Hz vibration",
+    5: "10 Hz sound+light",
+    7: "40 Hz sound+light",
+    8: "40 Hz light",
+    9: "40 Hz sound"
+}
+
+conditions = [1, 2, 3, 4, 5, 7, 8, 9]
+
+for measure in ["BPM", "RMSSD", "SDNN", "SF"]:
+    fig, axes = plt.subplots(2, 4, figsize=(14, 8))
+    axes = axes.flatten()
+if measure == "BPM":
+    y_min, y_max = 50, 95
+elif measure == "RMSSD":
+    y_min, y_max = None, None
+elif measure == "SDNN":
+    y_min, y_max = 20, 180
+elif measure == "SF":
+    y_min, y_max = 0, 35
+    nostim = df[df["Condition"] == 6][["Participant", measure]].rename(
+        columns={measure: "NoStim"}
+    )
+
+    for ax, condition in zip(axes, conditions):
+        stim = df[df["Condition"] == condition][["Participant", measure]].rename(
+            columns={measure: "Stim"}
+        )
+
+        paired = stim.merge(nostim, on="Participant").dropna()
+
+        for _, row in paired.iterrows():
+            ax.plot(
+                [0, 1],
+                [row["NoStim"], row["Stim"]],
+                marker="o",
+                alpha=0.4
+            )
+
+        ax.set_xticks([0, 1])
+        ax.set_xticklabels(["No stim", "Stim"])
+        ax.set_title(condition_labels[condition])
+
+        if ax in axes[::4]:
+            ax.set_ylabel(measure)
+
+    fig.suptitle(f"{measure}: Stimulation vs No Stimulation")
+    plt.tight_layout()
+    plt.savefig(f"{measure.lower()}_stim_vs_nostim.png", dpi=300)
+    plt.close()
 print("\nDone.")
