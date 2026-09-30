@@ -403,309 +403,6 @@ def finish_plot(ax):
     plt.tight_layout()
 
 
-bpm_participant_modality = (
-    stim_df.groupby(["Participant", "Modality"])["BPM"]
-    .mean()
-    .reset_index()
-)
-
-bpm_modality = (
-    bpm_participant_modality
-    .groupby("Modality")["BPM"]
-    .agg(["mean", "sem"])
-    .reindex(order)
-)
-
-fig, ax = plt.subplots(figsize=(8, 6))
-
-x = np.arange(len(order))
-
-ax.bar(
-    x,
-    bpm_modality["mean"],
-    yerr=bpm_modality["sem"],
-    capsize=5,
-    alpha=0.75,
-    edgecolor="black"
-)
-
-for i, modality in enumerate(order):
-    values = bpm_participant_modality[
-        bpm_participant_modality["Modality"] == modality
-    ]["BPM"].dropna().values
-
-    jitter = np.linspace(-0.12, 0.12, len(values))
-
-    ax.scatter(
-        np.full(len(values), i) + jitter,
-        values,
-        color="black",
-        alpha=0.6,
-        s=28,
-        zorder=3
-    )
-
-ax.set_xticks(x)
-ax.set_xticklabels(["Sound", "Vibration", "Light", "Sound + Light"])
-ax.set_ylabel("Mean BPM")
-ax.set_title("Heart Rate by Modality")
-
-y = max(bpm_modality["mean"] + bpm_modality["sem"]) + 2
-
-add_sig_bracket(
-    ax,
-    0,
-    1,
-    y,
-    0.5,
-    sig_stars(0.03933)
-)
-
-ax.set_ylim(top=y + 3)
-
-finish_plot(ax)
-
-plt.savefig("bpm_modality_plot.png", dpi=300, bbox_inches="tight")
-plt.close()
-
-
-interaction_df = stim_df.copy()
-
-interaction_df["Frequency_clean"] = (
-    interaction_df["Frequency"]
-    .astype(str)
-    .str.replace(" Hz", "", regex=False)
-)
-
-fig, ax = plt.subplots(figsize=(9, 6))
-
-x = np.arange(len(order))
-width = 0.32
-
-all_bpm_values = []
-
-for j, freq in enumerate(["10", "40"]):
-    means = []
-    sems = []
-
-    for modality in order:
-        values = interaction_df[
-            (interaction_df["Frequency_clean"] == freq) &
-            (interaction_df["Modality"] == modality)
-        ]["BPM"].dropna().values
-
-        means.append(values.mean())
-        sems.append(pd.Series(values).sem())
-        all_bpm_values.extend(values)
-
-    offset = -width / 2 if freq == "10" else width / 2
-    xpos = x + offset
-
-    ax.bar(
-        xpos,
-        means,
-        width=width,
-        yerr=sems,
-        capsize=4,
-        alpha=0.75,
-        edgecolor="black",
-        label=f"{freq} Hz"
-    )
-
-    for i, modality in enumerate(order):
-        values = interaction_df[
-            (interaction_df["Frequency_clean"] == freq) &
-            (interaction_df["Modality"] == modality)
-        ]["BPM"].dropna().values
-
-        jitter = np.linspace(-0.04, 0.04, len(values))
-
-        ax.scatter(
-            np.full(len(values), xpos[i]) + jitter,
-            values,
-            color="black",
-            alpha=0.45,
-            s=20,
-            zorder=3
-        )
-
-ax.set_xticks(x)
-ax.set_xticklabels(["Sound", "Vibration", "Light", "Sound + Light"])
-ax.set_ylabel("BPM")
-ax.set_title("Heart Rate by Modality and Frequency")
-ax.legend(frameon=False)
-
-y = max(all_bpm_values) + 3
-
-add_sig_bracket(
-    ax,
-    x[3] - width / 2,
-    x[3] + width / 2,
-    y,
-    0.5,
-    sig_stars(0.000127)
-)
-
-ax.set_ylim(top=y + 3)
-
-finish_plot(ax)
-
-plt.savefig("bpm_interaction_plot.png", dpi=300, bbox_inches="tight")
-plt.close()
-
-
-sf_participant_modality = (
-    stim_df.groupby(["Participant", "Modality"])["SF"]
-    .mean()
-    .reset_index()
-)
-
-sf_modality = (
-    sf_participant_modality
-    .groupby("Modality")["SF"]
-    .agg(["mean", "sem"])
-    .reindex(order)
-)
-
-fig, ax = plt.subplots(figsize=(8, 6))
-
-x = np.arange(len(order))
-
-ax.bar(
-    x,
-    sf_modality["mean"],
-    yerr=sf_modality["sem"],
-    capsize=5,
-    alpha=0.75,
-    edgecolor="black"
-)
-
-for i, modality in enumerate(order):
-    values = sf_participant_modality[
-        sf_participant_modality["Modality"] == modality
-    ]["SF"].dropna().values
-
-    jitter = np.linspace(-0.12, 0.12, len(values))
-
-    ax.scatter(
-        np.full(len(values), i) + jitter,
-        values,
-        color="black",
-        alpha=0.6,
-        s=28,
-        zorder=3
-    )
-
-ax.set_xticks(x)
-ax.set_xticklabels(["Sound", "Vibration", "Light", "Sound + Light"])
-ax.set_ylabel("SCR Frequency")
-ax.set_title("Skin Conductance Response Frequency by Modality")
-
-y1 = max(sf_modality["mean"] + sf_modality["sem"]) + 1
-
-add_sig_bracket(
-    ax,
-    0,
-    3,
-    y1,
-    0.3,
-    sig_stars(0.00860)
-)
-
-add_sig_bracket(
-    ax,
-    1,
-    3,
-    y1 + 1.2,
-    0.3,
-    sig_stars(0.00760)
-)
-
-ax.set_ylim(top=y1 + 3)
-
-finish_plot(ax)
-
-plt.savefig("sf_modality_plot.png", dpi=300, bbox_inches="tight")
-plt.close()
-
-
-sf_freq_df = stim_df.copy()
-
-sf_freq_df["Frequency_clean"] = (
-    sf_freq_df["Frequency"]
-    .astype(str)
-    .str.replace(" Hz", "", regex=False)
-)
-
-sf_participant_frequency = (
-    sf_freq_df
-    .groupby(["Participant", "Frequency_clean"])["SF"]
-    .mean()
-    .reset_index()
-)
-
-frequency_order = ["10", "40"]
-
-sf_frequency = (
-    sf_participant_frequency
-    .groupby("Frequency_clean")["SF"]
-    .agg(["mean", "sem"])
-    .reindex(frequency_order)
-)
-
-fig, ax = plt.subplots(figsize=(6, 6))
-
-x = np.arange(2)
-
-ax.bar(
-    x,
-    sf_frequency["mean"],
-    yerr=sf_frequency["sem"],
-    capsize=5,
-    alpha=0.75,
-    edgecolor="black"
-)
-
-for i, freq in enumerate(frequency_order):
-    values = sf_participant_frequency[
-        sf_participant_frequency["Frequency_clean"] == freq
-    ]["SF"].dropna().values
-
-    jitter = np.linspace(-0.08, 0.08, len(values))
-
-    ax.scatter(
-        np.full(len(values), i) + jitter,
-        values,
-        color="black",
-        alpha=0.6,
-        s=28,
-        zorder=3
-    )
-
-ax.set_xticks(x)
-ax.set_xticklabels(["10 Hz", "40 Hz"])
-ax.set_ylabel("SCR Frequency")
-ax.set_title("Skin Conductance Response Frequency by Frequency")
-
-y = max(sf_frequency["mean"] + sf_frequency["sem"]) + 1
-
-add_sig_bracket(
-    ax,
-    0,
-    1,
-    y,
-    0.3,
-    sig_stars(0.04318)
-)
-
-ax.set_ylim(top=y + 2)
-
-finish_plot(ax)
-
-plt.savefig("sf_frequency_plot.png", dpi=300, bbox_inches="tight")
-plt.close()
-
-
 def plot_all_conditions(
     measure,
     ylabel,
@@ -723,7 +420,7 @@ def plot_all_conditions(
 
     fig, ax = plt.subplots(figsize=(12, 6))
 
-    ax.bar(
+    bars = ax.bar(
         x,
         summary["mean"],
         yerr=summary["sem"],
@@ -732,6 +429,9 @@ def plot_all_conditions(
         edgecolor="black",
         linewidth=0.8
     )
+
+    bars[0].set_alpha(0.4)
+    bars[0].set_hatch("//")
 
     all_values = []
 
@@ -766,6 +466,9 @@ def plot_all_conditions(
     ax.set_ylabel(ylabel)
     ax.set_title(title)
 
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+
     if significant_pairs:
         data_max = max(all_values)
         data_min = min(all_values)
@@ -790,14 +493,14 @@ def plot_all_conditions(
 
             y += step
 
-        current_bottom, _ = ax.get_ylim()
+        bottom, _ = ax.get_ylim()
 
         ax.set_ylim(
-            current_bottom,
+            bottom,
             y + step
         )
 
-    finish_plot(ax)
+    plt.tight_layout()
 
     plt.savefig(
         filename,
@@ -810,30 +513,30 @@ def plot_all_conditions(
 
 plot_all_conditions(
     measure="BPM",
-    ylabel="BPM",
-    title="Heart Rate by Condition",
-    filename="bpm_stim_vs_nostim.png"
+    ylabel="Heart Rate (BPM)",
+    title="Heart Rate by Stimulation Condition",
+    filename="bpm_all_conditions.png"
 )
 
 plot_all_conditions(
     measure="RMSSD",
     ylabel="RMSSD",
-    title="RMSSD by Condition",
-    filename="rmssd_stim_vs_nostim.png"
+    title="RMSSD by Stimulation Condition",
+    filename="rmssd_all_conditions.png"
 )
 
 plot_all_conditions(
     measure="SDNN",
     ylabel="SDNN",
-    title="SDNN by Condition",
-    filename="sdnn_stim_vs_nostim.png"
+    title="SDNN by Stimulation Condition",
+    filename="sdnn_all_conditions.png"
 )
 
 plot_all_conditions(
     measure="TH",
     ylabel="Temperature",
-    title="Temperature by Condition",
-    filename="th_stim_vs_nostim.png",
+    title="Temperature by Stimulation Condition",
+    filename="temperature_all_conditions.png",
     significant_pairs=[
         (0, 2, 0.02836)
     ]
@@ -842,8 +545,8 @@ plot_all_conditions(
 plot_all_conditions(
     measure="SF",
     ylabel="SCR Frequency",
-    title="Skin Conductance Response Frequency by Condition",
-    filename="sf_stim_vs_nostim.png",
+    title="Skin Conductance Response Frequency by Stimulation Condition",
+    filename="scr_frequency_all_conditions.png",
     significant_pairs=[
         (0, 3, 0.00471),
         (0, 5, 0.04769)
@@ -851,10 +554,17 @@ plot_all_conditions(
 )
 
 plot_all_conditions(
+    measure="SCR_Peaks_N",
+    ylabel="SCR Peak Count",
+    title="SCR Peak Count by Stimulation Condition",
+    filename="scr_peaks_all_conditions.png"
+)
+
+plot_all_conditions(
     measure="SCR_Amplitude",
     ylabel="SCR Amplitude",
-    title="Skin Conductance Response Amplitude by Condition",
-    filename="scr_amplitude_stim_vs_nostim.png"
+    title="Skin Conductance Response Amplitude by Stimulation Condition",
+    filename="scr_amplitude_all_conditions.png"
 )
 bpm_line = (
     stim_df.groupby(["Frequency", "Modality"])["BPM"]
@@ -966,5 +676,545 @@ ax.spines["right"].set_visible(False)
 
 plt.tight_layout()
 plt.savefig("sf_interaction_line_plot.png", dpi=300, bbox_inches="tight")
+plt.close()
+pca_measures = [
+    "BPM",
+    "RMSSD",
+    "SDNN",
+    "TH",
+    "SF",
+    "SCR_Amplitude"
+]
+
+pca_df = df[
+    ["Participant", "Condition", "Frequency", "Modality"] + pca_measures
+].dropna().copy()
+
+X = pca_df[pca_measures].astype(float)
+
+X_z = (X - X.mean()) / X.std(ddof=0)
+
+U, S, Vt = np.linalg.svd(X_z, full_matrices=False)
+
+scores = U * S
+
+explained_variance = (S ** 2) / (len(X_z) - 1)
+explained_variance_ratio = explained_variance / explained_variance.sum()
+
+loadings = Vt.T
+
+pca_df["PC1"] = scores[:, 0]
+pca_df["PC2"] = scores[:, 1]
+
+pca_scores_output = pca_df[
+    [
+        "Participant",
+        "Condition",
+        "Frequency",
+        "Modality",
+        "PC1",
+        "PC2"
+    ]
+]
+
+pca_scores_output.to_csv(
+    "physiology_pca_scores.csv",
+    index=False
+)
+
+loading_df = pd.DataFrame(
+    {
+        "Measure": pca_measures,
+        "PC1": loadings[:, 0],
+        "PC2": loadings[:, 1]
+    }
+)
+
+loading_df.to_csv(
+    "physiology_pca_loadings.csv",
+    index=False
+)
+
+variance_df = pd.DataFrame(
+    {
+        "Component": [
+            f"PC{i + 1}"
+            for i in range(len(explained_variance_ratio))
+        ],
+        "Explained_Variance": explained_variance_ratio
+    }
+)
+
+variance_df.to_csv(
+    "physiology_pca_variance.csv",
+    index=False
+)
+
+fig, ax = plt.subplots(figsize=(8, 6))
+
+ax.bar(
+    np.arange(len(pca_measures)) - 0.18,
+    loading_df["PC1"],
+    width=0.36,
+    label="PC1"
+)
+
+ax.bar(
+    np.arange(len(pca_measures)) + 0.18,
+    loading_df["PC2"],
+    width=0.36,
+    label="PC2"
+)
+
+ax.axhline(0, linewidth=0.8)
+
+ax.set_xticks(np.arange(len(pca_measures)))
+ax.set_xticklabels(
+    [
+        "BPM",
+        "RMSSD",
+        "SDNN",
+        "Temperature",
+        "SCR Frequency",
+        "SCR Amplitude"
+    ],
+    rotation=25,
+    ha="right"
+)
+
+ax.set_ylabel("Loading")
+ax.set_title("Physiological PCA Loadings")
+ax.legend(frameon=False)
+
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+
+plt.tight_layout()
+plt.savefig(
+    "physiology_pca_loadings.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+plt.close()
+
+fig, ax = plt.subplots(figsize=(8, 6))
+
+for condition in condition_order:
+    data = pca_df[pca_df["Condition"] == condition]
+
+    ax.scatter(
+        data["PC1"],
+        data["PC2"],
+        alpha=0.65,
+        label=condition_labels[condition].replace("\n", " ")
+    )
+
+ax.set_xlabel(
+    f"PC1 ({explained_variance_ratio[0] * 100:.1f}% variance)"
+)
+ax.set_ylabel(
+    f"PC2 ({explained_variance_ratio[1] * 100:.1f}% variance)"
+)
+
+ax.set_title("Combined Physiological Response")
+ax.legend(
+    frameon=False,
+    fontsize=8,
+    bbox_to_anchor=(1.02, 1),
+    loc="upper left"
+)
+
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+
+plt.tight_layout()
+plt.savefig(
+    "physiology_pca_scores.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+plt.close()
+
+fig, ax = plt.subplots(figsize=(7, 5))
+
+components_to_show = min(
+    6,
+    len(explained_variance_ratio)
+)
+
+ax.bar(
+    np.arange(1, components_to_show + 1),
+    explained_variance_ratio[:components_to_show] * 100
+)
+
+ax.set_xlabel("Principal Component")
+ax.set_ylabel("Variance Explained (%)")
+ax.set_title("PCA Explained Variance")
+ax.set_xticks(
+    np.arange(1, components_to_show + 1)
+)
+
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+
+plt.tight_layout()
+plt.savefig(
+    "physiology_pca_variance.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+plt.close()
+
+
+bpm_by_modality = (
+    stim_df
+    .groupby(["Participant", "Modality"])["BPM"]
+    .mean()
+    .reset_index()
+)
+
+fig, ax = plt.subplots(figsize=(9, 6))
+
+x = np.arange(len(order))
+
+for participant in sorted(
+    bpm_by_modality["Participant"].unique()
+):
+    pdata = (
+        bpm_by_modality[
+            bpm_by_modality["Participant"] == participant
+        ]
+        .set_index("Modality")
+        .reindex(order)
+    )
+
+    ax.plot(
+        x,
+        pdata["BPM"],
+        marker="o",
+        alpha=0.55,
+        linewidth=1.2
+    )
+
+ax.set_xticks(x)
+ax.set_xticklabels(
+    ["Sound", "Vibration", "Light", "Sound + Light"]
+)
+
+ax.set_ylabel("BPM")
+ax.set_title("Individual Heart Rate Across Modalities")
+
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+
+plt.tight_layout()
+plt.savefig(
+    "bpm_participant_trajectories_modality.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+plt.close()
+
+
+bpm_condition_df = df[
+    ["Participant", "Condition", "BPM"]
+].dropna().copy()
+
+fig, ax = plt.subplots(figsize=(12, 6))
+
+x = np.arange(len(condition_order))
+
+for participant in sorted(
+    bpm_condition_df["Participant"].unique()
+):
+    pdata = (
+        bpm_condition_df[
+            bpm_condition_df["Participant"] == participant
+        ]
+        .set_index("Condition")
+        .reindex(condition_order)
+    )
+
+    ax.plot(
+        x,
+        pdata["BPM"],
+        marker="o",
+        alpha=0.5,
+        linewidth=1.1
+    )
+
+ax.set_xticks(x)
+
+ax.set_xticklabels(
+    [
+        condition_labels[c]
+        for c in condition_order
+    ],
+    rotation=25,
+    ha="right"
+)
+
+ax.set_ylabel("BPM")
+ax.set_title("Individual Heart Rate Across Conditions")
+
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+
+plt.tight_layout()
+plt.savefig(
+    "bpm_participant_trajectories_conditions.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+plt.close()
+
+
+highlight_participant = 1
+
+fig, ax = plt.subplots(figsize=(9, 6))
+
+for participant in sorted(
+    bpm_by_modality["Participant"].unique()
+):
+    pdata = (
+        bpm_by_modality[
+            bpm_by_modality["Participant"] == participant
+        ]
+        .set_index("Modality")
+        .reindex(order)
+    )
+
+    if participant == highlight_participant:
+        ax.plot(
+            x[:4],
+            pdata["BPM"],
+            marker="o",
+            linewidth=3,
+            label=f"Participant {participant}"
+        )
+    else:
+        ax.plot(
+            x[:4],
+            pdata["BPM"],
+            alpha=0.2,
+            linewidth=1
+        )
+
+ax.set_xticks(x[:4])
+
+ax.set_xticklabels(
+    ["Sound", "Vibration", "Light", "Sound + Light"]
+)
+
+ax.set_ylabel("BPM")
+ax.set_title(
+    f"Heart Rate Trajectory: Participant {highlight_participant}"
+)
+
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+
+plt.tight_layout()
+plt.savefig(
+    "bpm_highlighted_participant.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+plt.close()
+bpm_control = (
+    df[df["Condition"] == 6][["Participant", "BPM"]]
+    .rename(columns={"BPM": "NoStim_BPM"})
+)
+
+bpm_delta_df = (
+    df[["Participant", "Condition", "BPM"]]
+    .merge(bpm_control, on="Participant")
+)
+
+bpm_delta_df["Delta_BPM"] = (
+    bpm_delta_df["BPM"] - bpm_delta_df["NoStim_BPM"]
+)
+
+bpm_delta_df.to_csv(
+    "bpm_change_from_nostim.csv",
+    index=False
+)
+
+
+fig, ax = plt.subplots(figsize=(12, 6))
+
+x = np.arange(len(condition_order))
+
+for participant in sorted(
+    bpm_delta_df["Participant"].unique()
+):
+    pdata = (
+        bpm_delta_df[
+            bpm_delta_df["Participant"] == participant
+        ]
+        .set_index("Condition")
+        .reindex(condition_order)
+    )
+
+    ax.plot(
+        x,
+        pdata["Delta_BPM"],
+        marker="o",
+        alpha=0.55,
+        linewidth=1.1
+    )
+
+ax.axhline(0, linewidth=1)
+
+ax.set_xticks(x)
+
+ax.set_xticklabels(
+    [
+        condition_labels[c]
+        for c in condition_order
+    ],
+    rotation=25,
+    ha="right"
+)
+
+ax.set_ylabel("Change in BPM from No Stimulation")
+ax.set_title("Individual Heart Rate Change from No-Stimulation Control")
+
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+
+plt.tight_layout()
+
+plt.savefig(
+    "bpm_change_from_nostim_trajectories.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+
+plt.close()
+
+
+participant_bpm_summary = (
+    df.groupby("Participant")["BPM"]
+    .mean()
+    .reset_index(name="Mean_BPM")
+)
+
+participant_bpm_summary = participant_bpm_summary.merge(
+    bpm_control,
+    on="Participant"
+)
+
+participant_bpm_summary.to_csv(
+    "participant_bpm_summary.csv",
+    index=False
+)
+
+
+fig, ax = plt.subplots(figsize=(8, 6))
+
+ax.scatter(
+    participant_bpm_summary["NoStim_BPM"],
+    participant_bpm_summary["Mean_BPM"],
+    s=60,
+    alpha=0.75
+)
+
+for _, row in participant_bpm_summary.iterrows():
+    ax.text(
+        row["NoStim_BPM"] + 0.15,
+        row["Mean_BPM"] + 0.15,
+        row["Participant"],
+        fontsize=8
+    )
+
+ax.set_xlabel("No-Stimulation BPM")
+ax.set_ylabel("Mean BPM Across All Conditions")
+ax.set_title("Participant Baseline Heart Rate vs Overall Heart Rate")
+
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+
+plt.tight_layout()
+
+plt.savefig(
+    "bpm_baseline_vs_overall.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+
+plt.close()
+from scipy.stats import pearsonr
+
+baseline_corr_df = (
+    df.groupby("Participant")["BPM"]
+    .mean()
+    .reset_index(name="Mean_BPM")
+    .merge(
+        df[df["Condition"] == 6][["Participant", "BPM"]]
+        .rename(columns={"BPM": "NoStim_BPM"}),
+        on="Participant"
+    )
+)
+
+r_value, p_value = pearsonr(
+    baseline_corr_df["NoStim_BPM"],
+    baseline_corr_df["Mean_BPM"]
+)
+
+print("\nBaseline BPM vs Mean BPM")
+print(f"r = {r_value:.3f}")
+print(f"p = {p_value:.5f}")
+
+
+responder_summary = (
+    bpm_delta_df[bpm_delta_df["Condition"] != 6]
+    .assign(Abs_Delta_BPM=lambda d: d["Delta_BPM"].abs())
+    .groupby("Participant")["Abs_Delta_BPM"]
+    .mean()
+    .reset_index(name="Mean_Absolute_Delta_BPM")
+)
+
+responder_summary = responder_summary.sort_values(
+    "Mean_Absolute_Delta_BPM",
+    ascending=False
+)
+
+responder_summary.to_csv(
+    "bpm_responder_summary.csv",
+    index=False
+)
+
+print("\nMean absolute BPM change by participant")
+print(responder_summary)
+
+
+fig, ax = plt.subplots(figsize=(10, 6))
+
+ax.bar(
+    responder_summary["Participant"],
+    responder_summary["Mean_Absolute_Delta_BPM"]
+)
+
+ax.set_xlabel("Participant")
+ax.set_ylabel("Mean Absolute Change in BPM")
+ax.set_title("Magnitude of Heart Rate Response by Participant")
+
+ax.tick_params(
+    axis="x",
+    rotation=45
+)
+
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+
+plt.tight_layout()
+
+plt.savefig(
+    "bpm_response_magnitude_by_participant.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+
 plt.close()
 print("\nDone.")
