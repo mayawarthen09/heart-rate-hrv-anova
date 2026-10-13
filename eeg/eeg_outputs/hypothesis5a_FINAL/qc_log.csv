@@ -1,0 +1,101 @@
+Participant,Condition,Modality,Issue
+10,5,Sound + Light,Severely corrupted/disconnected recording
+11,2,Vibration,AGR skipped: missing P4
+11,4,Vibration,AGR skipped: missing P4
+11,3,Light,AGR skipped: missing P4
+11,8,Light,AGR skipped: missing P4
+11,5,Sound + Light,AGR skipped: missing P4
+11,7,Sound + Light,AGR skipped: missing P4
+12,"2,4",Vibration,Summary figure error: Recording contains only 28.20 s; 30 s required.
+12,4,Vibration,AGR extraction error: Recording contains only 28.20 s; 30 s required.
+13,"1,9",Sound,Summary figure error: Recording contains only 25.34 s; 30 s required.
+13,1,Sound,AGR extraction error: Recording contains only 25.34 s; 30 s required.
+13,9,Sound,AGR extraction error: Recording contains only 17.36 s; 30 s required.
+13,"2,4",Vibration,Summary figure error: Recording contains only 12.22 s; 30 s required.
+13,4,Vibration,AGR extraction error: Recording contains only 12.22 s; 30 s required.
+13,"3,8",Light,Summary figure error: Recording contains only 20.93 s; 30 s required.
+13,3,Light,AGR extraction error: Recording contains only 20.93 s; 30 s required.
+13,"5,7",Sound + Light,Summary figure error: Recording contains only 18.41 s; 30 s required.
+13,5,Sound + Light,AGR extraction error: Recording contains only 18.41 s; 30 s required.
+13,7,Sound + Light,AGR extraction error: Recording contains only 17.36 s; 30 s required.
+14,"1,9",Sound,Summary figure error: Recording contains only 22.10 s; 30 s required.
+14,1,Sound,AGR extraction error: Recording contains only 22.10 s; 30 s required.
+14,"5,7",Sound + Light,Summary figure error: Recording contains only 28.52 s; 30 s required.
+14,5,Sound + Light,AGR extraction error: Recording contains only 28.52 s; 30 s required.
+15,"1,9",Sound,Summary figure error: Recording contains only 22.58 s; 30 s required.
+15,9,Sound,AGR extraction error: Recording contains only 22.58 s; 30 s required.
+15,"2,4",Vibration,Summary figure error: Recording contains only 29.14 s; 30 s required.
+15,4,Vibration,AGR extraction error: Recording contains only 29.14 s; 30 s required.
+16,"1,9",Sound,Summary figure error: Recording contains only 24.35 s; 30 s required.
+16,1,Sound,AGR extraction error: Recording contains only 24.35 s; 30 s required.
+16,9,Sound,AGR extraction error: Recording contains only 19.94 s; 30 s required.
+16,"2,4",Vibration,Summary figure error: Recording contains only 28.85 s; 30 s required.
+16,2,Vibration,AGR extraction error: Recording contains only 28.85 s; 30 s required.
+16,4,Vibration,AGR extraction error: Recording contains only 26.20 s; 30 s required.
+16,"3,8",Light,Summary figure error: Recording contains only 26.38 s; 30 s required.
+16,3,Light,AGR extraction error: Recording contains only 26.38 s; 30 s required.
+16,8,Light,AGR extraction error: Recording contains only 19.94 s; 30 s required.
+21,"1,9",Sound,Summary figure error: Recording contains only 23.50 s; 30 s required.
+21,1,Sound,AGR extraction error: Recording contains only 23.50 s; 30 s required.
+21,"2,4",Vibration,Summary figure error: Recording contains only 25.89 s; 30 s required.
+21,4,Vibration,AGR extraction error: Recording contains only 25.89 s; 30 s required.
+21,"5,7",Sound + Light,Summary figure error: Recording contains only 23.29 s; 30 s required.
+21,7,Sound + Light,AGR extraction error: Recording contains only 23.29 s; 30 s required.
+23,"3,8",Light,Summary figure error: Recording contains only 27.72 s; 30 s required.
+23,3,Light,AGR extraction error: Recording contains only 27.72 s; 30 s required.
+23,"5,7",Sound + Light,Summary figure error: Recording contains only 27.36 s; 30 s required.
+23,5,Sound + Light,AGR extraction error: Recording contains only 27.36 s; 30 s required.
+24,"1,9",Sound,Summary figure error: Recording contains only 28.71 s; 30 s required.
+24,1,Sound,AGR extraction error: Recording contains only 28.71 s; 30 s required.
+25,"2,4",Vibration,Summary figure error: Recording contains only 23.35 s; 30 s required.
+25,2,Vibration,AGR extraction error: Recording contains only 23.35 s; 30 s required.
+25,"5,7",Sound + Light,Summary figure error: Recording contains only 25.96 s; 30 s required.
+25,7,Sound + Light,AGR extraction error: Recording contains only 25.96 s; 30 s required.
+26,"1,9",Sound,Summary figure error: Recording contains only 24.50 s; 30 s required.
+26,9,Sound,AGR extraction error: Recording contains only 24.50 s; 30 s required.
+27,"3,8",Light,Summary figure error: Recording contains only 24.63 s; 30 s required.
+27,3,Light,AGR extraction error: Recording contains only 24.63 s; 30 s required.
+28,"3,8",Light,Summary figure error: Recording contains only 27.26 s; 30 s required.
+28,3,Light,AGR extraction error: Recording contains only 27.26 s; 30 s required.
+28,"5,7",Sound + Light,Summary figure error: Recording contains only 28.45 s; 30 s required.
+28,7,Sound + Light,AGR extraction error: Recording contains only 28.45 s; 30 s required.
+29,"1,9",Sound,Summary figure error: Recording contains only 27.61 s; 30 s required.
+29,1,Sound,AGR extraction error: Recording contains only 27.61 s; 30 s required.
+29,"2,4",Vibration,Summary figure error: Recording contains only 29.93 s; 30 s required.
+29,2,Vibration,AGR extraction error: Recording contains only 29.93 s; 30 s required.
+29,4,Vibration,AGR extraction error: Recording contains only 18.85 s; 30 s required.
+29,"3,8",Light,Summary figure error: Recording contains only 27.76 s; 30 s required.
+29,3,Light,AGR extraction error: Recording contains only 27.76 s; 30 s required.
+29,8,Light,AGR extraction error: Recording contains only 22.49 s; 30 s required.
+29,"5,7",Sound + Light,Summary figure error: Recording contains only 28.69 s; 30 s required.
+29,5,Sound + Light,AGR extraction error: Recording contains only 28.69 s; 30 s required.
+29,7,Sound + Light,AGR extraction error: Recording contains only 22.45 s; 30 s required.
+30,"5,7",Sound + Light,Summary figure error: Recording contains only 26.43 s; 30 s required.
+30,5,Sound + Light,AGR extraction error: Recording contains only 26.43 s; 30 s required.
+32,"1,9",Sound,Summary figure error: Recording contains only 20.87 s; 30 s required.
+32,1,Sound,AGR extraction error: Recording contains only 20.87 s; 30 s required.
+32,9,Sound,AGR extraction error: Recording contains only 14.64 s; 30 s required.
+32,"2,4",Vibration,Summary figure error: Recording contains only 19.30 s; 30 s required.
+32,4,Vibration,AGR extraction error: Recording contains only 19.30 s; 30 s required.
+32,"3,8",Light,Summary figure error: Recording contains only 28.62 s; 30 s required.
+32,3,Light,AGR extraction error: Recording contains only 28.62 s; 30 s required.
+32,8,Light,AGR extraction error: Recording contains only 17.31 s; 30 s required.
+32,"5,7",Sound + Light,Summary figure error: Recording contains only 29.60 s; 30 s required.
+32,5,Sound + Light,AGR extraction error: Recording contains only 29.60 s; 30 s required.
+32,7,Sound + Light,AGR extraction error: Recording contains only 27.49 s; 30 s required.
+33,"1,9",Sound,Summary figure error: Recording contains only 24.59 s; 30 s required.
+33,1,Sound,AGR extraction error: Recording contains only 24.59 s; 30 s required.
+33,"2,4",Vibration,Summary figure error: Recording contains only 24.16 s; 30 s required.
+33,2,Vibration,AGR extraction error: Recording contains only 24.16 s; 30 s required.
+33,4,Vibration,AGR extraction error: Recording contains only 29.76 s; 30 s required.
+33,"3,8",Light,Summary figure error: Recording contains only 28.66 s; 30 s required.
+33,3,Light,AGR extraction error: Recording contains only 28.66 s; 30 s required.
+33,8,Light,AGR extraction error: Recording contains only 27.21 s; 30 s required.
+11,6,Vibration,No-stim AGR skipped: missing P4
+11,6,Light,No-stim AGR skipped: missing P4
+11,6,Sound + Light,No-stim AGR skipped: missing P4
+12,6,No Stimulation,No-stim load error: Recording contains only 26.32 s; 30 s required.
+23,6,No Stimulation,No-stim load error: Recording contains only 20.98 s; 30 s required.
+24,6,No Stimulation,No-stim load error: Recording contains only 27.87 s; 30 s required.
+32,6,No Stimulation,No-stim load error: Recording contains only 21.76 s; 30 s required.
+33,6,No Stimulation,No-stim load error: Recording contains only 26.00 s; 30 s required.
